@@ -5,11 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ozahir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/28 21:38:04 by ozahir            #+#    #+#             */
-/*   Updated: 2021/12/01 06:24:37 by ozahir           ###   ########.fr       */
+/*   Created: 2021/12/05 09:55:04 by ozahir            #+#    #+#             */
+/*   Updated: 2021/12/05 12:08:00 by ozahir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
+
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	char	*ddst;
@@ -29,31 +31,19 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	}
 	return ((void *)(dst));
 }
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*ss;
-	int		ln1;
-	int		ln2;
-	int		j;
 
-	j = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	ln1 = ft_strlen(s1);
-	ln2 = ft_strlen(s2);
-	ss = malloc((ln1 + ln2) * sizeof(char) + 1);
-	if (!ss)
-		return (NULL);
-	ft_memcpy(ss, s1, ln1);
-	while (s2[j])
-	{
-		ss[ln1 + j] = s2[j];
-		j++;
-	}
-	ss[ln1 + ln2] = 0;
-	return (ss);
+int	ft_strlen(char *s)
+{
+	int	i;
+
+	if (!s)
+		return (-1);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
 }
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	int		i;
 	int		s;
@@ -73,44 +63,46 @@ char	*ft_strdup(const char *s1)
 	return (str);
 }
 
-size_t	ft_strlen(const char *s)
+void	*sp_alloc(char *s1, char *s2)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-static char	*zerorule(char *ss)
-{
-	ss[0] = 0;
-	return (ss);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char			*ss;
-	unsigned int	i;
-	unsigned int	sl;
-
-	i = 0;
-	if (!s)
-		return (NULL);
-	sl = ft_strlen(s);
-	if (len > sl)
-		len = sl;
-	ss = malloc(len * sizeof(char) + 1);
-	if (!ss)
-		return (NULL);
-	if (start > sl)
-		return (zerorule(ss));
-	while (s[start] && i < len)
+	char	*new;
+	int		i;
+	int		b;
+	
+	if (!s1)
 	{
-		ss[i] = s[start];
-		i++;
-		start++;
+		new = ft_strdup(s2);
+		return (new);
 	}
-	ss[i] = 0;
-	return (ss);
+	i = ft_strlen(s1);
+	b = i + BUFFER_SIZE;
+	if (i == -1)
+		return (NULL);
+	new = malloc((b + 1) * sizeof(char));
+	if (!new)
+		return (NULL);
+	new[b] = '\0';
+	new = ft_memcpy(new, s1, i);
+	new = ft_memcpy(new + i, s2, BUFFER_SIZE);
+	free(s1);
+	return (new - i);
+}
+
+char	*newline(char *left)
+{
+	int		i;
+	char	*nl;
+	char	*tmp;
+
+	i = 0;
+	while (left[i] && left[i] != '\n')
+		i++;
+	nl = malloc((i + 2) * sizeof(char));
+	nl[i + 1] = 0;
+	nl = ft_memcpy(nl, left, i + 1);
+	tmp = left;
+	left = malloc(ft_strlen(left) - i);
+	left = ft_memcpy(left, tmp + i + 1, ft_strlen(tmp) - i);
+	free(tmp);
+	return (nl);
 }
