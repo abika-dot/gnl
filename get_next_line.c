@@ -6,7 +6,7 @@
 /*   By: ozahir <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/05 09:55:13 by ozahir            #+#    #+#             */
-/*   Updated: 2021/12/05 12:14:06 by ozahir           ###   ########.fr       */
+/*   Updated: 2021/12/05 23:42:45 by ozahir           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,34 +25,34 @@ int nl_sig(char *str)
 	return (0);
 }
 
-char	*get_next_line(int fd)
+char bufferfill(int fd, char *fill)
 {
-	char		*buffer;
-	static char	*garb;
-	char 	*play;
-	int			i;
-
-	if (garb && nl_sig(garb))
-		return(newline(garb));
-	else if (garb && !nl_sig(garb))
-	{
-		play = ft_strdup(garb);
-		free(garb);
-	}
-	i = 0;
+	char	*buffer;
+	int 	bytes;
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd < 0)
+	if (!buffer)
 		return (NULL);
-	buffer[BUFFER_SIZE + 1] = '\0';
-	while(1)
+	while (bytes != 0 && !nl_sig(buffer))
 	{
-		i = read(fd,buffer,BUFFER_SIZE);
-		play = sp_alloc(play,buffer);
-		if (nl_sig(play))
-			return (newline(garb));
-		if (i == 0 && !nl_sig(play))
-			return (free(buffer), play);
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		fill = sp_alloc(fill, buffer);
 	}
-	return NULL;
+	free(buffer);
+	return (fill);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*garb;
+	char	*line
+
+	if (fd < 0 || BUFFER_SIZE <= 0 )
+		return (NULL);
+	garb = bufferfill(fd ,garb);
+	if (!garb)
+		return NULL;
+	line = newline(garb);
+	return (line);
+
 }
