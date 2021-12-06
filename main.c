@@ -4,7 +4,13 @@
 
 int main()
 {
+    char *e;
+    int i = 0;
     int fd = open("txt", O_CREAT | O_RDWR, 0666);
-    printf("%s",get_next_line(fd)); 
+   while (i != 6)
+   {
+   e = get_next_line(fd); 
+       i++;
+   }
 
 }

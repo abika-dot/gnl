@@ -95,6 +95,8 @@ char	*newline(char *left)
 	char	*nl;
 	char	*tmp;
 
+
+	tmp = NULL;
 	i = 0;
 	while (left[i] && left[i] != '\n')
 		i++;

@@ -27,16 +27,18 @@ int nl_sig(char *str)
 	return (0);
 }
 
-char *bufferfill(int fd, char *fill)
+char *bufferfill(int fd)
 {
 	char	*buffer;
 	int 	total;
+	char	*temp;
 
+	temp = NULL;
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	total = 1;
-	while (total != 0 && !nl_sig(fill))
+	while (total != 0 && !nl_sig(temp))
 	{
 		total = read(fd, buffer, BUFFER_SIZE);
 		if (total == -1)
@@ -45,10 +47,9 @@ char *bufferfill(int fd, char *fill)
 			return(0);
 		}
 		buffer[total] = 0;
-		fill = sp_alloc(fill, buffer);
+		temp = sp_alloc(temp, buffer);
 	}
-	free(buffer);
-	return (fill);
+	return (temp);
 }
 char	*rest(char	*rest)
 {
@@ -62,9 +63,12 @@ char	*rest(char	*rest)
 	return NULL;
 	while(rest[i] && rest[i] != '\n')
 		i++;
-	temp = malloc((ft_strlen(rest) - i + 1) * sizeof(char));
+	temp = malloc((ft_strlen(rest) - i ) * sizeof(char));
 	if (!temp)
 	return NULL;
+	i++;
+	if (rest[i] == 0)
+	return 0;
 	while(rest[i])
 	{
 		temp[j] = rest[i];
@@ -83,7 +87,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 )
 		return (0);
-	garb = bufferfill(fd ,garb);
+	garb = bufferfill(fd );
 	if (!garb)
 		return NULL;
 	str = newline(garb);
