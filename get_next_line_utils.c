@@ -72,6 +72,7 @@ void	*sp_alloc(char *s1, char *s2)
 	if (!s1)
 	{
 		new = ft_strdup(s2);
+		free(s2);
 		return (new);
 	}
 	i = ft_strlen(s1);
@@ -98,11 +99,10 @@ char	*newline(char *left)
 	while (left[i] && left[i] != '\n')
 		i++;
 	nl = malloc((i + 2) * sizeof(char));
+	if (!nl)
+	return (0);
 	nl[i + 1] = 0;
 	nl = ft_memcpy(nl, left, i + 1);
-	tmp = left;
-	left = malloc(ft_strlen(left) - i);
-	left = ft_memcpy(left, tmp + i + 1, ft_strlen(tmp) - i);
 	free(tmp);
 	return (nl);
 }

@@ -16,6 +16,8 @@ int nl_sig(char *str)
 	int	i;
 
 	i = 0;
+	if(!str)
+	return 0;
 	while (str[i])
 	{
 		if (str[i] == '\n')
@@ -25,34 +27,66 @@ int nl_sig(char *str)
 	return (0);
 }
 
-char bufferfill(int fd, char *fill)
+char *bufferfill(int fd, char *fill)
 {
 	char	*buffer;
-	int 	bytes;
+	int 	total;
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	while (bytes != 0 && !nl_sig(buffer))
+	total = 1;
+	while (total != 0 && !nl_sig(fill))
 	{
-		bytes = read(fd, buffer, BUFFER_SIZE);
+		total = read(fd, buffer, BUFFER_SIZE);
+		if (total == -1)
+		{
+			free(buffer);
+			return(0);
+		}
+		buffer[total] = 0;
 		fill = sp_alloc(fill, buffer);
 	}
 	free(buffer);
 	return (fill);
 }
+char	*rest(char	*rest)
+{
+	char	*temp;
+	int i;
+	int j;
+
+	j = 0;
+	i = 0;
+	if (!rest)
+	return NULL;
+	while(rest[i] && rest[i] != '\n')
+		i++;
+	temp = malloc((ft_strlen(rest) - i + 1) * sizeof(char));
+	if (!temp)
+	return NULL;
+	while(rest[i])
+	{
+		temp[j] = rest[i];
+		j++;
+		i++;
+	}
+	temp[j] = 0;
+	free(rest);
+	return(temp);
+}
 
 char	*get_next_line(int fd)
 {
 	static char	*garb;
-	char	*line
+	char	*str;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 )
-		return (NULL);
+		return (0);
 	garb = bufferfill(fd ,garb);
 	if (!garb)
 		return NULL;
-	line = newline(garb);
-	return (line);
-
+	str = newline(garb);
+	garb = rest(garb);
+	return (str);
 }

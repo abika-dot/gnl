@@ -21,6 +21,7 @@ void	*sp_alloc(char *s1, char *s2);
 char	*newline(char *left);
 int nl_sig(char *str);
 char	*get_next_line(int fd);
+char	*rest(char	*rest);
 
 
 #endif
