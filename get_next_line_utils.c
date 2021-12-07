@@ -13,24 +13,24 @@
 #include "get_next_line.h"
 
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
-	size_t	count;
-	size_t	i;
+	char	*ddst;
+	char	*ssrc;
+	int		i;
 
-	count = 0;
+	if (!dst && !src)
+		return (NULL);
+	ddst = (char *)dst;
+	ssrc = (char *)src;
 	i = 0;
-	while (src[count])
-		count++;
-	if (dstsize == 0)
-		return (count);
-	while (src[i] && dstsize != 0 && i < dstsize - 1)
+	while (n)
 	{
-		dst[i] = src[i];
+		ddst[i] = ssrc[i];
+		n--;
 		i++;
 	}
-	dst[i] = '\0';
-	return (count);
+	return ((void *)(dst));
 }
 
 int	ft_strlen(char const *s)
@@ -63,35 +63,34 @@ char	*ft_strdup(char const *s1)
 	str[i] = '\0';
 	return (str);
 }
-
 char	*ft_strjoin(char *s1, char const *s2)
 {
-	char	*s;
-	size_t	l;
-	size_t	k;
+	char	*ss;
+	int		ln1;
+	int		ln2;
+	int		j;
 
-	k = 0;
-	l = 0;
+	j = 0;
 	if (!s1)
-	{
-		s1 = (char *)malloc(sizeof(char));
-		s1[0] = '\0';
-	}	
-	s = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!s)
-		return (NULL);
-	while (s1[k] != '\0')
-	{
-		s[k] = s1[k];
-		k++;
+	{	
+		s1 = ft_strdup(s2);
+		return (s1);
 	}
-	while (s2[l] != '\0')
-		s[k++] = s2[l++];
-	s[k] = '\0';
-	free (s1);
-	return (s);
+	ln1 = ft_strlen(s1);
+	ln2 = ft_strlen(s2);
+	ss = malloc((ln1 + ln2) * sizeof(char) + 1);
+	if (!ss)
+		return (NULL);
+	ft_memcpy(ss, s1, ln1);
+	while (s2[j])
+	{
+		ss[ln1 + j] = s2[j];
+		j++;
+	}
+	ss[ln1 + ln2] = 0;
+	free(s1);
+	return (ss);
 }
-
 char	*newline(char *left)
 {
 	int		i;
