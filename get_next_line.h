@@ -15,9 +15,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 void	*ft_memcpy(void *dst, const void *src, size_t n);
-int	ft_strlen(char *s);
-char	*ft_strdup(char *s1);
-void	*sp_alloc(char *s1, char *s2);
+int	ft_strlen(char const *s);
+char	*ft_strdup(const char *s1);
+char	*ft_strjoin(char *s1, char const *s2);
 char	*newline(char *left);
 int nl_sig(char *str);
 char	*get_next_line(int fd);

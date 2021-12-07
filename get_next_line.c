@@ -27,13 +27,12 @@ int nl_sig(char *str)
 	return (0);
 }
 
-char *bufferfill(int fd)
+char *bufferfill(int fd,char *temp)
 {
 	char	*buffer;
 	int 	total;
-	char	*temp;
 
-	temp = NULL;
+
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
@@ -46,40 +45,25 @@ char *bufferfill(int fd)
 			free(buffer);
 			return(0);
 		}
-		buffer[total] = 0;
-		temp = sp_alloc(temp, buffer);
+		buffer[total ] = 0;
+		temp = ft_strjoin(temp, buffer);
 	}
 	return (temp);
 }
-char	*rest(char	*rest)
+char	*rest(char	*str)
 {
-	char	*temp;
-	int i;
-	int j;
+	int		i;
+	char	*tmp;
 
-	j = 0;
 	i = 0;
-	if (!rest)
-	return NULL;
-	while(rest[i] && rest[i] != '\n')
+	if (!str)
+		return NULL;
+	while(str[i] && str[i] != '\n')
 		i++;
-	temp = malloc((ft_strlen(rest) - i ) * sizeof(char));
-	if (!temp)
-	return NULL;
-	i++;
-	if (rest[i] == 0)
-	return 0;
-	while(rest[i])
-	{
-		temp[j] = rest[i];
-		j++;
-		i++;
-	}
-	temp[j] = 0;
-	free(rest);
-	return(temp);
+	tmp = ft_strdup(str + i+1);
+	free(str);
+	return (tmp);
 }
-
 char	*get_next_line(int fd)
 {
 	static char	*garb;
@@ -87,9 +71,13 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 )
 		return (0);
-	garb = bufferfill(fd );
+	garb = bufferfill(fd ,garb);
 	if (!garb)
-		return NULL;
+	{
+		free(garb);
+		garb = NULL;
+		return (NULL);
+	}
 	str = newline(garb);
 	garb = rest(garb);
 	return (str);

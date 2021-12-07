@@ -9,7 +9,7 @@ int main()
     int fd = open("txt", O_CREAT | O_RDWR, 0666);
    while (i != 6)
    {
-   e = get_next_line(fd); 
+ printf("%s",get_next_line(fd)); 
        i++;
    }
 
