@@ -43,24 +43,33 @@ char *bufferfill(int fd,char *temp)
 		if (total == -1)
 		{
 			free(buffer);
-			return(0);
+			return(NULL);
 		}
 		buffer[total ] = 0;
-		temp = ft_strjoin(temp, buffer);
+		temp = ft_strjoin(temp , buffer);
 	}
+	free(buffer);
 	return (temp);
 }
 char	*rest(char	*str)
 {
 	int		i;
+	int l;
 	char	*tmp;
 
+	l = 0;
 	i = 0;
 	if (!str)
 		return NULL;
 	while(str[i] && str[i] != '\n')
 		i++;
-	tmp = ft_strdup(str + i+1);
+	if (str[i] == '\0')
+		return(free(str) ,NULL);
+	tmp =	malloc(sizeof(char) * (ft_strlen(str) - i + 1));
+	i++;
+	while (str[i] != '\0')
+	tmp[l++] = str[i++];
+	tmp[l] = '\0';
 	free(str);
 	return (tmp);
 }
@@ -73,12 +82,14 @@ char	*get_next_line(int fd)
 		return (0);
 	garb = bufferfill(fd ,garb);
 	if (!garb)
-	{
-		free(garb);
-		garb = NULL;
 		return (NULL);
-	}
 	str = newline(garb);
 	garb = rest(garb);
+	if (str[0] == '\0')
+	{
+	free(garb);
+	free(str);
+	return (NULL);
+	}
 	return (str);
 }

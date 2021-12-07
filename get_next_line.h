@@ -14,7 +14,8 @@
 # define GET_NEXT_LINE_H
 #include <stdlib.h>
 #include <unistd.h>
-void	*ft_memcpy(void *dst, const void *src, size_t n);
+#include <fcntl.h>
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 int	ft_strlen(char const *s);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char *s1, char const *s2);
